@@ -18,20 +18,17 @@ const init = async () => {
     method: 'POST',
     path: '/apps',
     handler: (request, h) => {
-      const payload = request.payload
-      const schema = joi.object({
-        apps: joi.array().items(joi.number())
-      })
-      const { error, value } = schema.validate(payload);
-      const hasError=error !== undefined;
-      if (hasError) {
-        return h.response('invalid input type').code(400)
-      } else {
-        const numberOfProperties = payload.apps.length
-        return h.response(numberOfProperties).code(200)
+      const numberOfProperties = request.payload.apps.length
+      return h.response(numberOfProperties).code(200);
+    },
+    options:{
+      validate:{
+        payload:joi.object({
+          apps: joi.array().items(joi.number())
+        })
       }
     }
-  })
+  });
 
   await server.start()
   console.log('Server running on %s', server.info.uri)
